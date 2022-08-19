@@ -23,7 +23,7 @@ namespace GiftShop.Controllers
             var data = await _service.GetAll();
             return View(data);
         }
-
+        //Create new category
         public async Task<IActionResult> Create()
         {
             return View();
@@ -37,6 +37,50 @@ namespace GiftShop.Controllers
                 return View(category);
             }
             _service.Add(category);
+            return RedirectToAction(nameof(Index));
+        }
+
+        //Update category
+        public async Task<IActionResult> Edit(int id)
+        {
+            var categoryDetail = await _service.GetById(id);
+            if (categoryDetail == null) 
+                return View("NotFound");
+
+
+            return View(categoryDetail);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, [Bind("Id, CategoryName")] Category category)
+        {
+            if (!ModelState.IsValid) //Checks for requirements in the model
+            {
+                return View(category);
+            }
+            _service.Update(id, category);
+            return RedirectToAction(nameof(Index));
+        }
+
+        //Delete category
+        public async Task<IActionResult> Delete(int id)
+        {
+            var categoryDetail = await _service.GetById(id);
+            if (categoryDetail == null)
+                return View("NotFound");
+
+
+            return View(categoryDetail);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var categoryDetail = await _service.GetById(id);
+            if (categoryDetail == null)
+                return View("NotFound");
+
+            await _service.Delete(id);
             return RedirectToAction(nameof(Index));
         }
     }
