@@ -1,4 +1,5 @@
 using GiftShop.Data;
+using GiftShop.Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -27,6 +28,11 @@ namespace GiftShop
         {
             //DbContext config
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            //Custom services
+            //Category services
+            services.AddScoped<ICategoriesService, CategoriesService>();
+
             services.AddControllersWithViews();
         }
 
