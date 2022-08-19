@@ -17,8 +17,8 @@ namespace GiftShop.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var data = await _context.Categories.ToListAsync();
-            return View();
+            var data = await _context.Items.Include(n => n.Category).OrderBy(n => n.ItemName).ToListAsync();
+            return View(data);
         }
     }
 }

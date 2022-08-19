@@ -1,4 +1,6 @@
 ﻿using GiftShop.Data;
+using GiftShop.Data.Services;
+using GiftShop.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -10,16 +12,32 @@ namespace GiftShop.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly ICategoriesService _service;
 
-        public CategoriesController(AppDbContext context)
+        public CategoriesController(ICategoriesService service)
         {
-            _context = context;
+            _service = service;
         }
         public async Task<IActionResult> Index()
         {
-            var data = await _context.Categories.ToListAsync();
+            var data = await _service.GetAll();
             return View(data);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([Bind("CategoryName")] Category category)
+        {
+            if (!ModelState.IsValid) //Checks for requirements in the model
+            {
+                return View(category);
+            }
+            _service.Add(category);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
