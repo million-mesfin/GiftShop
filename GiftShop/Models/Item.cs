@@ -11,14 +11,22 @@ namespace GiftShop.Models
     {
         [Key]
         public int Id { get; set; }
-
+        [Required]
+        [Display(Name = "Item Name")]
         public string ItemName { get; set; }
+        [Required]
+        [Display(Name = "Image URL")]
         public string ImageURL { get; set; }
+        [Required]
         public double Price { get; set; }
+        [Required]
+        [Display(Name = "Availability Status")]
         public string AvailabilityStatus { get; set; }
         public string Description { get; set; }
 
         //Relationships
+        [Required]
+        [Display(Name = "Category ID")]
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         public Category Category { get; set; }

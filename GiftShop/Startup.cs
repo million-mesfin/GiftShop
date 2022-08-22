@@ -33,6 +33,9 @@ namespace GiftShop
             //Category services
             services.AddScoped<ICategoriesService, CategoriesService>();
 
+            //Item services
+            services.AddScoped<IItemsService, ItemsService>();
+
             services.AddControllersWithViews();
         }
 
