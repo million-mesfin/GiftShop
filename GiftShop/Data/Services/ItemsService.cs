@@ -1,4 +1,5 @@
 ﻿using GiftShop.Data.Base;
+using GiftShop.Data.viewModels;
 using GiftShop.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,6 +22,13 @@ namespace GiftShop.Data.Services
         {
             var itemDetail = await _context.Items.Include(c => c.Category).FirstOrDefaultAsync(n => n.Id == id);
             return itemDetail;
+        }
+
+        public async Task<NewItemDropDownVM> GetNewItemDropDownValues()
+        {
+            var response = new NewItemDropDownVM();
+            response.Catagories = await _context.Categories.OrderBy(n => n.CategoryName).ToListAsync();
+            return response;
         }
 
         /*
