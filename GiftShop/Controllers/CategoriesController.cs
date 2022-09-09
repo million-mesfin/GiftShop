@@ -58,7 +58,7 @@ namespace GiftShop.Controllers
             {
                 return View(category);
             }
-            _service.Update(id, category);
+            await _service.Update(id, category);
             return RedirectToAction(nameof(Index));
         }
 

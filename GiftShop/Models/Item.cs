@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GiftShop.Data.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GiftShop.Models
 {
-    public class Item
+    public class Item : IEntityBase
     {
         [Key]
         public int Id { get; set; }

@@ -34,6 +34,7 @@
 
                         <label asp-for="CategoryId" class="control-label"></label>
                         <input asp-for="CategoryId" class="form-control" readonly/>
+                        <p>Category Name : @Model.Category.CategoryName</p>
                         <span asp-validation-for="CategoryId" class="text-danger"></span>
                     </div>
                     <div class="form-group">

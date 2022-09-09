@@ -19,9 +19,17 @@ namespace GiftShop.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var data = await _service.GetAll(); ;
+            var data = await _service.GetAll(n => n.Category); ;
             return View(data);
         }
+
+       /*
+        public async Task<IActionResult> Filter(int id)
+        {
+            var data = await _service.Filter(id); ;
+            return View(data);
+        }
+       */
 
         //Create new category
         public IActionResult Create()
@@ -43,7 +51,7 @@ namespace GiftShop.Controllers
         //Details
         public async Task<IActionResult> Details (int id)
         {
-            var details = await _service.GetById(id);
+            var details = await _service.GetItemById(id);
 
             if (details == null)
                 return View("NotFound");

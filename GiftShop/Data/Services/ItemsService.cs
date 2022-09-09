@@ -1,4 +1,5 @@
-﻿using GiftShop.Models;
+﻿using GiftShop.Data.Base;
+using GiftShop.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,13 +8,22 @@ using System.Threading.Tasks;
 
 namespace GiftShop.Data.Services
 {
-    public class ItemsService : IItemsService
+    public class ItemsService : EntityBaseRepository<Item>, IItemsService
     {
+
         private readonly AppDbContext _context;
-        public ItemsService(AppDbContext context)
+        public ItemsService(AppDbContext context) : base (context)
         {
             _context = context;
         }
+
+        public async Task<Item> GetItemById(int id)
+        {
+            var itemDetail = await _context.Items.Include(c => c.Category).FirstOrDefaultAsync(n => n.Id == id);
+            return itemDetail;
+        }
+
+        /*
         public void Add(Item item)
         {
             _context.Items.Add(item);
@@ -29,13 +39,13 @@ namespace GiftShop.Data.Services
 
         public async Task<IEnumerable<Item>> GetAll()
         {
-            var result = await _context.Items.ToListAsync();
+            var result = await _context.Items.Include(c => c.Category).ToListAsync();
             return result;
         }
 
         public async Task<Item> GetById(int id)
         {
-            var result = await _context.Items.FirstOrDefaultAsync(n => n.Id == id);
+            var result = await _context.Items.Include(c => c.Category).FirstOrDefaultAsync(n => n.Id == id);
             return result;
         }
 
@@ -45,5 +55,6 @@ namespace GiftShop.Data.Services
             _context.SaveChanges();
             return newItem;
         }
+        */
     }
 }
