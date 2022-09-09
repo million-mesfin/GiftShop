@@ -2,7 +2,6 @@
 using GiftShop.Data.Services;
 using GiftShop.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,41 +19,21 @@ namespace GiftShop.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var data = await _service.GetAll(n => n.Category);
-            var dropDownData = await _service.GetDropDownValues();
-
-            ViewBag.Categories = new SelectList(dropDownData.Categories, "Id", "CategoryName");
-
+            var data = await _service.GetAll(n => n.Category); ;
             return View(data);
         }
 
-        //Filter based on category
-        public async Task<IActionResult> Filter(int categoryId)
+       /*
+        public async Task<IActionResult> Filter(int id)
         {
-            List<Item> filterResult = null;
-            var data = await _service.GetAll(n => n.Category);
-            var dropDownData = await _service.GetDropDownValues();
-
-            ViewBag.Categories = new SelectList(dropDownData.Categories, "Id", "CategoryName");
-
-            if(categoryId != 0)
-            {
-                filterResult = data.Where(n => n.CategoryId.Equals(categoryId)).ToList();
-            }
-            else
-            {
-                return View(data);
-            }
-
-            return View("Index", filterResult);
+            var data = await _service.Filter(id); ;
+            return View(data);
         }
+       */
 
         //Create new category
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
         {
-            var dropDownData = await _service.GetDropDownValues();
-
-            ViewBag.Categories = new SelectList(dropDownData.Categories, "Id", "CategoryName");
             return View();
         }
 

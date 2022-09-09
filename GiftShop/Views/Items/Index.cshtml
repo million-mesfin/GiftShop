@@ -14,10 +14,14 @@
 
 <div class="header">
     <h1>Items List</h1>
-    <form asp-action="Filter" asp-controller="Items" method="post">
+    <form asp-action="Filter" method="post">
         <span class="d-flex" style="width: 250px; align-items: baseline;">
-            <select name="categoryId" id="filter" class="form-control d-inline" asp-items="ViewBag.Categories">
-                <option value="0">All</option>
+            <select id="filter" class="form-control d-inline">
+
+                @foreach (var item in Model)
+                {
+                    <option value="@item.Category.Id">@item.Category.CategoryName</option>
+                }
             </select>
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit" style="margin-left: 20px;">Filter</button>
         </span>
