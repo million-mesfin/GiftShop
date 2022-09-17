@@ -45,6 +45,9 @@ namespace GiftShop
 
             services.AddSession();
 
+            //Order services
+            services.AddScoped<IOrdersService, OrdersService>();
+
             services.AddControllersWithViews();
         }
 
