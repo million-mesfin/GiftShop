@@ -25,6 +25,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Category</a>
                         </li>
                     </ul>
+                    <ul class="navbar-nav">
+                        @await Component.InvokeAsync("ShoppingCartSummary") 
+                    </ul>
+
+                    @* user profile*@
+                    <div class="dropdown">
+                        <button class="btn btn-outline-success dropdown-toggle" type="button" id="profile-btn" data-toggle="dropdown" aria-expanded="false">Hello User</button>
+                        <ul class="dropdown-menu" aria-labelledby="profile-btn">
+                            <li>
+                                <a class="dropdown-item" asp-controller="Orders" asp-action="Index">Orders</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
