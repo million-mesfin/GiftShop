@@ -13,12 +13,22 @@ namespace GiftShop.Controllers
     {
         private readonly IItemsService _itemsService;
         private readonly ShoppingCart _shoppingCart;
+        private readonly IOrdersService _ordersService;
 
-        public OrdersController(IItemsService itemsService, ShoppingCart shoppingCart)
+        public OrdersController(IItemsService itemsService, ShoppingCart shoppingCart, IOrdersService ordersService)
         {
             _itemsService = itemsService;
             _shoppingCart = shoppingCart;
+            _ordersService = ordersService;
         }
+
+        public async Task<IActionResult> Index()
+        {
+            string userId = "";
+            var orders = await _ordersService.GetOrdersByUserId(userId);
+            return View(orders);
+        }
+
         public IActionResult ShoppingCart()
         {
             var items = _shoppingCart.GetShoppingCartItems();
@@ -53,6 +63,17 @@ namespace GiftShop.Controllers
                 _shoppingCart.RemoveItemFromCart(item);
             }
             return RedirectToAction(nameof(ShoppingCart));
+        }
+
+        public async Task<IActionResult> CompleteOrder()
+        {
+            var items = _shoppingCart.GetShoppingCartItems();
+            string userId = "";
+            string userEmailAddress = "";
+
+            await _ordersService.StoreOrder(items, userId, userEmailAddress);
+            await _shoppingCart.ClearShoppingCart();
+            return View("OrderCompleted");
         }
     }
 }
