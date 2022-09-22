@@ -117,7 +117,7 @@ namespace GiftShop.Controllers
             {
                 return View(item);
             }
-            _service.Update(id, item);
+            await _service.Update(id, item);
             return RedirectToAction(nameof(Index));
         }
     }
