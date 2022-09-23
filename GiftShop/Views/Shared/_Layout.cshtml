@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - GiftShop</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/Login.css" />
 </head>
 <body>
     <header>
@@ -19,25 +20,23 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Items" asp-action="Index">Items</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Items" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Category</a>
-                        </li>
+
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Category</a>
+                            </li>
+                        }
+
                     </ul>
                     <ul class="navbar-nav">
-                        @await Component.InvokeAsync("ShoppingCartSummary") 
+                        @await Component.InvokeAsync("ShoppingCartSummary")
                     </ul>
+                    
+                    <partial name="_Identity.cshtml" />
 
-                    @* user profile*@
-                    <div class="dropdown">
-                        <button class="btn btn-outline-success dropdown-toggle" type="button" id="profile-btn" data-toggle="dropdown" aria-expanded="false">Hello User</button>
-                        <ul class="dropdown-menu" aria-labelledby="profile-btn">
-                            <li>
-                                <a class="dropdown-item" asp-controller="Orders" asp-action="Index">Orders</a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </nav>
