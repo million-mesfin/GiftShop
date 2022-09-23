@@ -14,9 +14,15 @@ namespace GiftShop.Data.Services
         {
             _context = context;
         }
-        public Task<List<Order>> GetOrdersByUserId(string userId)
+        public async Task<List<Order>> GetOrdersByUserIdAndRole(string userId, string userRole)
         {
-            var orders = _context.Orders.Include(n => n.OrderItems).ThenInclude(n => n.Item).Where(n => n.UserId == userId).ToListAsync();
+            var orders = await _context.Orders.Include(n => n.OrderItems).ThenInclude(n => n.Item).Include(n => n.User).ToListAsync();
+
+            if (userRole != "Admin")
+            {
+                orders = orders.Where(n => n.UserId == userId).ToList();
+            }
+
             return orders;
         }
 
