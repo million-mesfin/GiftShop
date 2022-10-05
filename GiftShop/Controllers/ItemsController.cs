@@ -42,7 +42,7 @@ namespace GiftShop.Controllers
             }
             else
             {
-                return View(data);
+                return View("Index", data.ToList());
             }
         }
 

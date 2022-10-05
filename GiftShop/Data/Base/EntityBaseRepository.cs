@@ -53,11 +53,11 @@ namespace GiftShop.Data.Base
 
         public async Task Update(int id, T entity)
         {
-            EntityEntry entityEntry = _context.Entry<T>(entity);
+            EntityEntry entityEntry =  _context.Entry<T>(entity);
             entityEntry.State = EntityState.Modified;
 
 
-            _context.SaveChanges();
+           _context.SaveChanges();
         }
     }
 }

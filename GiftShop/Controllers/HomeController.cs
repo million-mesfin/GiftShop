@@ -18,6 +18,11 @@ namespace GiftShop.Controllers
             _logger = logger;
         }
 
+        public IActionResult About()
+        {
+            return View();
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -26,6 +31,20 @@ namespace GiftShop.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        //social media redirect
+        public IActionResult Facebook()
+        {
+            return Redirect("http://www.facebook.com");
+        }
+        public IActionResult Instagram()
+        {
+            return Redirect("http://www.instagram.com");
+        }
+        public IActionResult Twitter()
+        {
+            return Redirect("http://www.twitter.com");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
