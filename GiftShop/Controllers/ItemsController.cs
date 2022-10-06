@@ -107,6 +107,8 @@ namespace GiftShop.Controllers
                 return View("NotFound");
 
 
+            var itemDropDownData = await _service.GetNewItemDropDownValues();
+            ViewBag.Categories = new SelectList(itemDropDownData.Catagories, "Id", "CategoryName");
             return View(item);
         }
 
