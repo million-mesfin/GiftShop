@@ -4,46 +4,45 @@
     ViewData["Title"] = "Item Detail";
 }
 
-<div class="row text">
-    <div class="col-md-8 offset-2">
-        <p>
-            <h1>Details for @Model.ItemName</h1>
-        </p>
-        <div class="row">
-            <div class="col-md-8 offset-2">
-                    <div class="form-group">
-                        <label asp-for="ItemName" class="control-label"></label>
-                        <input asp-for="ItemName" class="form-control" readonly/>
-                        <span asp-validation-for="ItemName" class="text-danger"></span>
 
-                        <label asp-for="ImageURL" class="control-label"></label>
-                        <input asp-for="ImageURL" class="form-control" readonly/>
-                        <span asp-validation-for="ImageURL" class="text-danger"></span>
+<div class="detail-body">
+    <div class="info-container">
+        <img src="@Model.ImageURL" alt="@Model.ItemName Picture" />
 
-                        <label asp-for="Price" class="control-label"></label>
-                        <input asp-for="Price" class="form-control" readonly/>
-                        <span asp-validation-for="Price" class="text-danger"></span>
-
-                        <label asp-for="AvailabilityStatus" class="control-label"></label>
-                        <input asp-for="AvailabilityStatus" class="form-control" readonly/>
-                        <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
-
-                        <label asp-for="Description" class="control-label"></label>
-                        <input asp-for="Description" class="form-control" readonly/>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-
-                        <label asp-for="CategoryId" class="control-label"></label>
-                        <input asp-for="CategoryId" class="form-control" readonly/>
-                        <span asp-validation-for="CategoryId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <a class="btn btn-outline-success float-right" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-                        <a class="btn btn-outline-danger float-right" style="margin-right: 5px;" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
-                        <a class="btn btn-outline-secondary" asp-action="Index">Show All</a>
-                    </div>
+        <div class="detail-text">
+            <div class="decore-img">
+                <img src="~/svgs/border top.png" />
+            </div>
+            <h2>@Model.ItemName</h2>
+            <hr />
+            <p>@Model.Description</p>
+            <p>Item Category: <b>@Model.Category.CategoryName</b></p>
+            <hr style="margin-bottom: 60px;" />
+            <div class="price-avail">
+                <p>Price: <b>@Model.Price.ToString("C")</b></p>
+                <p style="text-decoration: underline; color: @((Model.AvailabilityStatus == "In Stock") ? "green" : "red")">@Model.AvailabilityStatus</p>
             </div>
 
         </div>
+
     </div>
+
+    <div class="form-group detail-btns">
+
+        <div class="detail-primary-btns">
+            <a class="btn btn-outline-secondary" asp-action="Index">Back</a>
+            <a class="btn item-add text-white @((!User.Identity.IsAuthenticated || @Model.AvailabilityStatus != "In Stock") ? "disabled" : "" )" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@Model.Id">Add to Cart (@Model.Price.ToString("c"))</a>
+        </div>
+
+    </div>
+
+
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <div class="detail-admin-btns">
+            <a class="btn btn-outline-danger float-right" style="margin-right: 5px;" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+            <a class="btn btn-outline-success float-right" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        </div>
+    }
 
 </div>

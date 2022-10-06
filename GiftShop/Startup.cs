@@ -1,8 +1,13 @@
 using GiftShop.Data;
+using GiftShop.Data.Cart;
 using GiftShop.Data.Services;
+using GiftShop.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +41,26 @@ namespace GiftShop
             //Item services
             services.AddScoped<IItemsService, ItemsService>();
 
+            //Order services
+            services.AddScoped<IOrdersService, OrdersService>();
+
+            //Http context accessor
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddScoped(sc => ShoppingCart.GetShoppingCart(sc));
+
+            //Authentication
+            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+            services.AddMemoryCache();
+            services.AddSession();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            });
+
+
+            
+
             services.AddControllersWithViews();
         }
 
@@ -56,7 +81,11 @@ namespace GiftShop
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseSession();
 
+            //Auth
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -65,6 +94,9 @@ namespace GiftShop
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            //seed database
+            AppDbInitializer.SeedUsersAndRolesAsync(app).Wait();
         }
     }
 }

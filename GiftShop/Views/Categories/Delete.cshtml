@@ -12,10 +12,8 @@
         <div class="row">
             <div class="col-md-8 offset-2">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="CategoryName" class="control-label"></label>
-                        <input asp-for="CategoryName" class="form-control" />
-                        <span asp-validation-for="CategoryName" class="text-danger"></span>
+                    <div>
+                        <p class="fs-4">Are you sure you want to delete the category: <b>@Model.CategoryName </b> ?</p>
                     </div>
                     <div class="form-group">
                         <form asp-action="Delete">

@@ -4,49 +4,57 @@
     ViewData["Title"] = "Items List";
 }
 
-<h1>Items List</h1>
+<style>
+    .header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+</style>
 
-<div class="row">
+<div class="header item-header">
+    <h1>Items List</h1>
+    <form asp-action="Filter" method="post">
+        <span class="d-flex" style="width: 250px; align-items: baseline;">
+            <select name="categoryId" id="filter" class="form-control d-inline" asp-items="ViewBag.Categories">
+                <option value="0">All</option>
+            </select>
+            <button class="btn my-2 my-sm-0 item-filter" type="submit" style="margin-left: 20px;">Filter</button>
+        </span>
+    </form>
+</div>
+
+<div class="item-list">
     @foreach (var item in Model)
     {
-        <div class="col-md-3 col-xs-6 border-primary mb-3">
-            <div class="card mb-3" style="max-width: 540px;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-header text-white bg-info">
-                            <p class="card-text">
-                                <h5 class="card-title">
-                                    @item.ItemName
-                                    <a class="text-white float-right" asp-action="Edit" asp-route-id="@item.Id"></a>
-                                </h5>
-                            </p>
-                        </div>
+
+        <div class="item-tile">
+            <a class="item-detail" asp-action="Details" asp-route-id="@item.Id">
+                <img src="@item.ImageURL" alt="Alternate Text" />
+
+                <div class="item-tile-text text-dark">
+                    <h4 style="max-width: 230px; text-decoration: underline;">@item.ItemName</h4>
+                    <div class="text-dark">
+                        <p>@item.Description</p>
+                        <p style="@((item.AvailabilityStatus == "In Stock") ? "color: green;" : "color: red;") font-size: 13px;">@item.AvailabilityStatus</p>
                     </div>
-                    <div class="col-md-6">
-                        <img src="@item.ImageURL" width="100%" alt="@item.ItemName">
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card-body">
-                            <p class="card-text"><b>Price: </b>@item.Price.ToString("c")</p>
-                            <p class="card-text "><b>@item.AvailabilityStatus</b></p>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card-footer ">
-                            <p class="card-text">
-                                <a class="btn btn-outline-primary float-right" asp-action="Details" asp-route-id="@item.Id">Details</a>
-                                <a class="btn btn-success text-white">
-                                    <i class="bi bi-cart-plus"></i> Add to Cart
-                                </a>
-                            </p>
-                        </div>
-                    </div>
+                </div>
+            </a>
+            <div>
+                <div class="card-footer">
+                    <p class="card-text item-tile-footer">
+                        <a class="btn item-add text-white @((!User.Identity.IsAuthenticated || item.AvailabilityStatus != "In Stock") ? "disabled" : "" )" asp-controller="Orders" asp-action="AddItemToShoppingCart" asp-route-id="@item.Id">Add to Cart (@item.Price.ToString("c"))</a>
+                    </p>
                 </div>
             </div>
         </div>
     }
 </div>
 
-<div style="margin-bottom: 50px; margin-right: 40px;" class="fixed-bottom text-right">
-    <a class="btn btn-success text-white" asp-controller="Items" asp-action="Create">+ Add Item</a>
-</div>
+@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+{
+    <div style="margin-bottom: 50px; margin-right: 40px;" class="fixed-bottom text-right">
+        <a class="btn-add-item btn btn-success text-white" asp-controller="Items" asp-action="Create">+ Add</a>
+    </div>
+}
+

@@ -2,6 +2,7 @@
 using GiftShop.Data.Services;
 using GiftShop.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,13 +20,38 @@ namespace GiftShop.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var data = await _service.GetAll(); ;
+            var data = await _service.GetAll(n => n.Category);
+            var itemDropDownData = await _service.GetNewItemDropDownValues();
+
+            ViewBag.Categories = new SelectList(itemDropDownData.Catagories, "Id", "CategoryName");
             return View(data);
         }
 
-        //Create new category
-        public IActionResult Create()
+        //Filter
+        public async Task<IActionResult> Filter(int categoryId)
         {
+            var data = await _service.GetAll(n => n.Category);
+            var itemDropDownData = await _service.GetNewItemDropDownValues();
+
+            ViewBag.Categories = new SelectList(itemDropDownData.Catagories, "Id", "CategoryName");
+
+            if (categoryId != 0)
+            {
+                var filterData = data.Where(n => n.CategoryId.Equals(categoryId)).ToList();
+                return View("Index", filterData);
+            }
+            else
+            {
+                return View("Index", data.ToList());
+            }
+        }
+
+        //Create new category
+        public async Task<IActionResult> Create()
+        {
+            var itemDropDownData = await _service.GetNewItemDropDownValues();
+
+            ViewBag.Categories = new SelectList(itemDropDownData.Catagories, "Id", "CategoryName"); //import MVC.Rendering library
             return View();
         }
 
@@ -43,7 +69,7 @@ namespace GiftShop.Controllers
         //Details
         public async Task<IActionResult> Details (int id)
         {
-            var details = await _service.GetById(id);
+            var details = await _service.GetItemById(id);
 
             if (details == null)
                 return View("NotFound");
@@ -81,6 +107,8 @@ namespace GiftShop.Controllers
                 return View("NotFound");
 
 
+            var itemDropDownData = await _service.GetNewItemDropDownValues();
+            ViewBag.Categories = new SelectList(itemDropDownData.Catagories, "Id", "CategoryName");
             return View(item);
         }
 
@@ -91,7 +119,7 @@ namespace GiftShop.Controllers
             {
                 return View(item);
             }
-            _service.Update(id, item);
+            await _service.Update(id, item);
             return RedirectToAction(nameof(Index));
         }
     }
